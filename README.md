@@ -1,4 +1,4 @@
-#REACT Tic-Tac-Toe App
+# REACT Tic-Tac-Toe App
 
 This app is created following the [tutorial](https://reactjs.org/tutorial/tutorial.html)
 
