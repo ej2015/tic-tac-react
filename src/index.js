@@ -97,7 +97,7 @@ import './index.css';
           'Go to move #' + move + ' (' + step.row + '|' + step.col + ')':
           'Go to game start';
         return (
-          <li key={move}>
+          <li key={move} className={(move === this.state.stepNumber ? 'step selected' : 'step')}>
             <button onClick={() => this.jumpTo(move)}>{desc}</button>
           </li>
         )

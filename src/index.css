@@ -48,3 +48,7 @@ body {
   .game-info {
     margin-left: 20px;
   }  
+
+  .step.selected button {
+    font-weight: bold
+  }
