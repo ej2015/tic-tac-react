@@ -16,20 +16,22 @@ import './index.css';
   class Moves extends React.Component {
     render(){
       const history = this.props.history;
-      const moves = history.map((step, move) =>{
-      const desc = move ?
-        'Go to move #' + move + ' (' + step.row + '|' + step.col + ')':
-        'Go to game start';
-      return (
+      var moves = history.map((step, move) =>{
+        const description = move ?
+          'Go to move #' + move + ' (' + step.row + '|' + step.col + ')':
+          'Go to game start';
+        return (
         <li key={move} className={(move === this.props.stepNumber ? 'step selected' : 'step')}>
-          <button onClick={() => this.props.jumpTo(move)}>{desc}</button>
+          <button onClick={() => this.props.jumpTo(move)}>{description}</button>
         </li>
-      )
-    })
+        )
+      })
+      if (!this.props.asc)
+        moves.reverse()
    
-    return (
-      <ol>{moves}</ol>
-    )
+      return (
+        <ol>{moves}</ol>
+      )
     }
   }
   
@@ -65,7 +67,8 @@ import './index.css';
             col: null,
           }],
           stepNumber: 0,
-          xIsNext: true
+          xIsNext: true,
+          sortMoveListAsc: true,
         }
     }
 
@@ -93,6 +96,12 @@ import './index.css';
         stepNumber: step,
         xIsNext: (step % 2) === 0,
       });
+    }
+
+    toggleMoveList() {
+      this.setState({
+        sortMoveListAsc: !this.state.sortMoveListAsc,
+      })
     }
 
     render() {
@@ -128,10 +137,12 @@ import './index.css';
           </div>
           <div className="game-info">
             <div className="status">{status}</div>
+            <button onClick={()=>this.toggleMoveList()}>Sort Steps</button>
             <Moves 
               history={this.state.history} 
               stepNumber={this.state.stepNumber}
               jumpTo={jumpTo.bind(this)}
+              asc={this.state.sortMoveListAsc}
             />
           </div>
         </div>
