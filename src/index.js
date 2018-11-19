@@ -12,7 +12,26 @@ import './index.css';
         </button>
       );
   }
- 
+
+  class Moves extends React.Component {
+    render(){
+      const history = this.props.history;
+      const moves = history.map((step, move) =>{
+      const desc = move ?
+        'Go to move #' + move + ' (' + step.row + '|' + step.col + ')':
+        'Go to game start';
+      return (
+        <li key={move} className={(move === this.props.stepNumber ? 'step selected' : 'step')}>
+          <button onClick={() => this.props.jumpTo(move)}>{desc}</button>
+        </li>
+      )
+    })
+   
+    return (
+      <ol>{moves}</ol>
+    )
+    }
+  }
   
   class Board extends React.Component {
     renderSquare(i) {
@@ -77,6 +96,7 @@ import './index.css';
     }
 
     render() {
+      var jumpTo = this.jumpTo;
       const history = this.state.history;
       const current = history[this.state.stepNumber];
       const winner = calculateWinner(current.squares);
@@ -108,13 +128,18 @@ import './index.css';
           </div>
           <div className="game-info">
             <div className="status">{status}</div>
-            <ol>{moves}</ol>
+            <Moves 
+              history={this.state.history} 
+              stepNumber={this.state.stepNumber}
+              jumpTo={jumpTo.bind(this)}
+            />
           </div>
         </div>
       );
     }
   }
   
+
   // ========================================
   
   ReactDOM.render(
