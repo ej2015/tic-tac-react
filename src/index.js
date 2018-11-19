@@ -108,7 +108,7 @@ import './index.css';
       var jumpTo = this.jumpTo;
       const history = this.state.history;
       const current = history[this.state.stepNumber];
-      const winner = calculateWinner(current.squares);
+      const winningMove = calculateWinner(current.squares);
       const moves = history.map((step, move) =>{
         const desc = move ?
           'Go to move #' + move + ' (' + step.row + '|' + step.col + ')':
@@ -121,8 +121,8 @@ import './index.css';
       })
 
       let status;
-      if (winner) {
-        status = 'Winner: ' + winner;
+      if (winningMove) {
+        status = 'Winner: ' + current.squares[winningMove[0]];
       } else {
         status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
       }
@@ -190,7 +190,7 @@ import './index.css';
     for (let i = 0; i < lines.length; i++) {
       const [a, b, c] = lines[i];
       if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
-        return squares[a];
+        return [a,b,c];
       }
     }
     return null;
