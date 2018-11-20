@@ -2,6 +2,13 @@
 
 This app is created following the [tutorial](https://reactjs.org/tutorial/tutorial.html)
 
+Added features:
+* Display location for each move
+* Bold the currently selected step
+* A toggle button for moves list
+* A new game button
+* Highlight wining moves
+* Show 'Draw' when it's a draw
 
 ## Available Scripts
 
