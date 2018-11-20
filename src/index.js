@@ -95,7 +95,7 @@ import './index.css';
       const squares = current.squares.slice();
       var winningMove = calculateWinner(squares)
       
-      if(winningMove[0] !== null | squares[i]) {
+      if(winningMove[0] !== null || squares[i]) {
         return;
       }
 
