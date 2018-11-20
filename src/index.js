@@ -3,9 +3,10 @@ import ReactDOM from 'react-dom';
 import './index.css';
 
   function Square(props) {
+    console.log(props.isWin)
     return (
         <button
-          className="square" 
+          className={"square " + (props.isWin ? "" : "gray")}
           onClick={props.onClick}
         >
           {props.value}
@@ -36,21 +37,30 @@ import './index.css';
   }
   
   class Board extends React.Component {
-    renderSquare(i) {
+    renderSquare(i, isWin) {
       return( 
         <Square 
           key = {i}
           value={this.props.squares[i]}
           onClick={() => this.props.onClick(i)}
+          isWin = {isWin}
         />
       );
     }
   
     render() {
+      const winningMove = this.props.winningMove.slice()
       return (<div>
         {
           [0,1,2].map((i) => <div className="board-row" key={i}>
-            {[0,1,2].map((j) => this.renderSquare(i*3 + j))}
+            {[0,1,2].map((j) => {
+                const p = i*3 + j
+                var isWin = true
+                if (winningMove[0] !== null & !winningMove.includes(p)) 
+                  isWin = false
+                return this.renderSquare(p, isWin)
+                })
+            }
             </div>)
         }
       </div>);
@@ -69,16 +79,27 @@ import './index.css';
           stepNumber: 0,
           xIsNext: true,
           sortMoveListAsc: true,
+          winningMove: Array(3).fill(null),
         }
     }
 
+    updateWinningMove(winningMove) {
+      this.setState({
+        winningMove: winningMove
+      })
+
+    }
     handleClick(i) {
       const history = this.state.history.slice(0, this.state.stepNumber + 1);
       const current = history[history.length - 1];
       const squares = current.squares.slice();
-      if (calculateWinner(squares) || squares[i]) {
+      var winningMove = calculateWinner(squares)
+      
+      if(winningMove[0] !== null | squares[i]) {
         return;
       }
+
+      //update moves
       squares[i] = this.state.xIsNext ? 'X' : 'O';
       this.setState({
         history: history.concat([{
@@ -89,6 +110,12 @@ import './index.css';
         stepNumber: history.length,
         xIsNext: !this.state.xIsNext,
       })
+
+      winningMove = calculateWinner(squares)
+      if (winningMove[0] !== null ){
+        this.updateWinningMove(winningMove)
+        return
+      }
     }
 
     jumpTo(step) {
@@ -109,19 +136,9 @@ import './index.css';
       const history = this.state.history;
       const current = history[this.state.stepNumber];
       const winningMove = calculateWinner(current.squares);
-      const moves = history.map((step, move) =>{
-        const desc = move ?
-          'Go to move #' + move + ' (' + step.row + '|' + step.col + ')':
-          'Go to game start';
-        return (
-          <li key={move} className={(move === this.state.stepNumber ? 'step selected' : 'step')}>
-            <button onClick={() => this.jumpTo(move)}>{desc}</button>
-          </li>
-        )
-      })
 
       let status;
-      if (winningMove) {
+      if (winningMove[0] !== null ) {
         status = 'Winner: ' + current.squares[winningMove[0]];
       } else {
         status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
@@ -133,6 +150,7 @@ import './index.css';
             <Board 
               squares={current.squares}
               onClick= {(i) => this.handleClick(i)}
+              winningMove={winningMove}
             />
           </div>
           <div className="game-info">
@@ -193,5 +211,5 @@ import './index.css';
         return [a,b,c];
       }
     }
-    return null;
+    return Array(3).fill(null);
   }
