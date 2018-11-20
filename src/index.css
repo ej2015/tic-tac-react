@@ -55,3 +55,7 @@ body {
   .step.selected button {
     font-weight: bold
   }
+
+  button.op{
+    margin: auto 5px;
+  }

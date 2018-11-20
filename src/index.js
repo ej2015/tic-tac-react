@@ -131,6 +131,20 @@ import './index.css';
       })
     }
 
+    newGame(){
+      this.setState({
+        history: [{
+          squares: Array(9).fill(null),
+          row: null,
+          col: null,
+        }],
+        stepNumber: 0,
+        xIsNext: true,
+        sortMoveListAsc: true,
+        winningMove: Array(3).fill(null),
+      })
+    }
+
     render() {
       var jumpTo = this.jumpTo;
       const history = this.state.history;
@@ -140,6 +154,8 @@ import './index.css';
       let status;
       if (winningMove[0] !== null ) {
         status = 'Winner: ' + current.squares[winningMove[0]];
+      } else if (!current.squares.includes(null)) {
+        status = "Draw"
       } else {
         status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
       }
@@ -155,7 +171,8 @@ import './index.css';
           </div>
           <div className="game-info">
             <div className="status">{status}</div>
-            <button onClick={()=>this.toggleMoveList()}>Sort Steps</button>
+            <button className="op" onClick={()=>this.toggleMoveList()}>Sort Steps</button>
+            <button className="op" onClick={()=>this.newGame()}>New Game</button>
             <Moves 
               history={this.state.history} 
               stepNumber={this.state.stepNumber}
